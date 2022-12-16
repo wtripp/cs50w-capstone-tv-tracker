@@ -14,6 +14,10 @@ def index(request):
     return render(request, "tv/index.html")
 
 
+#def search(request):
+#    pass
+
+
 def login_view(request):
     if request.method == "POST":
 
