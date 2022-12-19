@@ -1,6 +1,7 @@
+/*
+
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Post emails when form is submitted
   document.querySelector('#search').addEventListener('submit', function(event) {
     event.preventDefault();
     search();
@@ -15,9 +16,21 @@ function search() {
     fetch(url)
     .then(response => response.json())
     .then(results => {
-        console.log(results);
+
+      fetch('search', {
+        method: 'POST',
+        body: JSON.stringify({
+          results: results,
+        })
+      })
+      .catch(error => {
+        console.log('Error: ', error);
+      });
+
     })
     .catch(error => {
         console.log('Error: ', error);
     });
 }
+
+*/

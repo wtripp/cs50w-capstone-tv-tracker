@@ -1,0 +1,45 @@
+{% extends "tv/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h2>Search Results</h2>
+    {% for show in shows %}
+        <div class="container-sm show-summary">
+            <div class="row">
+                <div class="col-lg-10 col-sm-8">
+                    <h3>
+                        <a class="show-title" href="{% url 'tv:show' show.id show.name %}">{{ show.name }}</a>
+                        {% if show.channel %}
+                            <span> &#151; {{ show.channel }}</span>
+                        {% endif %}
+                        {% if show.startyear %}
+                            <span> ({{ show.startyear }})</span>
+                        {% endif %}
+                    </h3>
+                    <p>
+                        {% if show.mostrecentairdate %}
+                            <span><strong>Most Recent Episode:</strong> {{ show.mostrecentairdate }}</span>
+                            {% if show.status == "Running" %}
+                                </span>(Running)</span>
+                            {% endif %}
+                        {% endif %}
+
+                    </p>
+                </div>
+                <div class="col-lg-2 col-sm-4">
+                    <button class="btn btn-secondary track-button">Track/Untrack</button>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No shows to display</p>
+    {% endfor %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{% static 'tv/script.js' %}"></script>
+{% endblock %}
+
+{% load static %}

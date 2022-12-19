@@ -1,0 +1,30 @@
+.show-summary {
+    padding: 10px;
+    margin: 20px;
+    border: 2px solid darkgray;
+    border-radius: 5px;
+    background-color: lightgray;
+}
+
+.show-title:hover {
+    text-decoration: none;
+  }
+  
+  .no-link-styling:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+.body {
+  padding: 10px;
+}
+
+
+.track-button {
+  float: right;
+  margin-top: 20px;
+}
+
+.active {
+  color: green;
+}

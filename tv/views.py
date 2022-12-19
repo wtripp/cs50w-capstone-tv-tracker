@@ -7,6 +7,7 @@ from django.urls import reverse
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+import requests
 
 from .models import User, Show
 
@@ -14,8 +15,53 @@ def index(request):
     return render(request, "tv/index.html")
 
 
-#def search(request):
-#    pass
+def search(request):
+
+    query = request.GET.get("q")
+    url = f"https://api.tvmaze.com/search/shows?q={query}"
+    results = requests.get(url).json()
+
+    shows = [result["show"] for result in results]
+    for show in shows:
+
+        # Set network channel
+        if "network" in show and show["network"]:
+            show["channel"] = show["network"]["name"]
+        elif "webChannel" in show and show["webChannel"]:
+            show["channel"] = show["webChannel"]["name"]
+        else:
+            show["channel"] = None
+
+        # Set start year
+        try:
+            year = show["premiered"].split("-")[0]
+            show["startyear"] = year
+        except:
+            show["startyear"] = None
+
+        # Set most recent episode airdate
+        if "nextepisode" in show["_links"] and show["_links"]["nextepisode"]:
+            episode_url = show["_links"]["nextepisode"]["href"]
+            episode = requests.get(episode_url).json()
+            show["mostrecentairdate"] = episode["airdate"]
+        if "previousepisode" in show["_links"] and show["_links"]["previousepisode"]:
+            episode_url = show["_links"]["previousepisode"]["href"]
+            episode = requests.get(episode_url).json()
+            show["mostrecentairdate"] = episode["airdate"]
+        else:
+            show["mostrecentairdate"] = None
+
+    return render(request, "tv/search.html", {
+        "shows": shows
+    })
+
+
+def show(request, show_id, show_name):
+    return render(request, "tv/show.html", {
+        "id": show_id,
+        "name": show_name,
+    })
+    
 
 
 def login_view(request):
