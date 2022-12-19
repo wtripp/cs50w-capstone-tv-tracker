@@ -8,6 +8,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import requests
+import datetime
 
 from .models import User, Show
 
@@ -33,11 +34,12 @@ def search(request):
             show["channel"] = None
 
         # Set start year
+        show["startyear"] = None
         try:
-            year = show["premiered"].split("-")[0]
-            show["startyear"] = year
-        except:
-            show["startyear"] = None
+            start_year = show["premiered"].split("-")[0]
+            show["startyear"] = start_year
+        except AttributeError:
+            pass
 
         # Set most recent episode airdate
         if "nextepisode" in show["_links"] and show["_links"]["nextepisode"]:
@@ -50,7 +52,17 @@ def search(request):
             show["mostrecentairdate"] = episode["airdate"]
         else:
             show["mostrecentairdate"] = None
-
+        
+        # Set end year
+        show["endyear"] = None
+        try:
+            this_year = datetime.date.today().year
+            end_year = show["mostrecentairdate"].split("-")[0]
+            if int(end_year) < this_year:
+                show["endyear"] = end_year
+        except AttributeError:
+            pass
+        
     return render(request, "tv/search.html", {
         "shows": shows
     })

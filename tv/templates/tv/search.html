@@ -11,18 +11,22 @@
                     <h3>
                         <a class="show-title" href="{% url 'tv:show' show.id show.name %}">{{ show.name }}</a>
                         {% if show.channel %}
-                            <span> &#151; {{ show.channel }}</span>
+                            <span> &mdash; {{ show.channel }}</span>
                         {% endif %}
-                        {% if show.startyear %}
-                            <span> ({{ show.startyear }})</span>
+
+                        {% if show.startyear and show.endyear %}
+                            {% if show.startyear == show.endyear %}
+                                <span> ({{ show.startyear }})</span>
+                            {% else %}
+                                <span> ({{ show.startyear }}&ndash;{{ show.endyear }})</span>
+                            {% endif %}
+                        {% elif show.startyear and not show.endyear %}
+                            <span> ({{ show.startyear }}&ndash;)</span>
                         {% endif %}
                     </h3>
                     <p>
                         {% if show.mostrecentairdate %}
                             <span><strong>Most Recent Episode:</strong> {{ show.mostrecentairdate }}</span>
-                            {% if show.status == "Running" %}
-                                </span>(Running)</span>
-                            {% endif %}
                         {% endif %}
 
                     </p>
