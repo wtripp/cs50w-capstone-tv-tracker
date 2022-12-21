@@ -9,16 +9,6 @@
 .show-title:hover {
     text-decoration: none;
   }
-  
-  .no-link-styling:hover {
-    text-decoration: none;
-    color: inherit;
-  }
-
-.body {
-  padding: 10px;
-}
-
 
 .track-button {
   float: right;
@@ -27,4 +17,13 @@
 
 .active {
   color: green;
+}
+
+.show-info {
+  list-style-type: none;
+  padding: 0;
+}
+
+.body {
+  padding: 10px;
 }

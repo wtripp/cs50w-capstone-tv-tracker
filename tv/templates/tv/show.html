@@ -3,7 +3,32 @@
 
 {% block body %}
 
-    <h2>{{name}}</h2>
+    <h2>{{show.name}}</h2>
+    <div class="container float-left show">
+        <div class="row">
+            <div class="col-xs-3">
+                <img src="{{ show.image.medium }}" alt="{{ show.name }}">
+            </div>
+            <div class="col-xs-3">
+                {{ show.summary|safe }}
+            </div>
+            <div class="col-xs-3">
+                <ul class="show-info">
+                    <li><strong>Channel:</strong> {{ show.channel }}</li>
+                    <li><strong>Premiered:</strong> {{ show.premiered }}</li>
+                    <li><strong>Most Recent Episode:</strong> {{ show.mostrecentairdate }}</li>
+                    <li><strong>URL:</strong> <a href="{{ show.url }}">{{ show.url }}</a></li>
+                    <li><strong>Status:</strong> {{ show.status }}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 float-left">
+                <button class="btn btn-secondary track-button">Track/Untrack</button>
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}
 
