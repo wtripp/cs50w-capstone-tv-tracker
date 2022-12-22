@@ -6,13 +6,15 @@
     <h2>{{show.name}}</h2>
     <div class="container float-left show">
         <div class="row">
-            <div class="col-xs-3">
-                <img src="{{ show.image.medium }}" alt="{{ show.name }}">
-            </div>
-            <div class="col-xs-3">
+            {% if show.image.medium %}
+                <div class="col-md-4">
+                    <img src="{{ show.image.medium }}" alt="{{ show.name }}">
+                </div>
+            {% endif %}
+            <div class="col-md-3">
                 {{ show.summary|safe }}
             </div>
-            <div class="col-xs-3">
+            <div class="col-md-3">
                 <ul class="show-info">
                     <li><strong>Channel:</strong> {{ show.channel }}</li>
                     <li><strong>Premiered:</strong> {{ show.premiered }}</li>
@@ -22,11 +24,14 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12 float-left">
-                <button class="btn btn-secondary track-button">Track/Untrack</button>
+
+        {% if user.is_authenticated %}
+            <div class="row">
+                <div class="col-lg-2 col-sm-4">
+                    <button class="btn btn-secondary track-button">Track/Untrack</button>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
 

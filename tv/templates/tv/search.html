@@ -31,9 +31,13 @@
 
                     </p>
                 </div>
-                <div class="col-lg-2 col-sm-4">
-                    <button class="btn btn-secondary track-button">Track/Untrack</button>
-                </div>
+
+                {% if user.is_authenticated %}
+                    <div class="col-lg-2 col-sm-4">
+                        {% if show.id in users.shows %}
+                        <button class="btn btn-secondary track-button">Track/Untrack</button>
+                    </div>
+                {% endif %}
             </div>
         </div>
     {% empty %}
