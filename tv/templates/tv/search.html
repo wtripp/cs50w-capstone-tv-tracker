@@ -32,12 +32,8 @@
                     </p>
                 </div>
 
-                {% if user.is_authenticated %}
-                    <div class="col-lg-2 col-sm-4">
-                        {% if show.id in users.shows %}
-                        <button class="btn btn-secondary track-button">Track/Untrack</button>
-                    </div>
-                {% endif %}
+                {% include 'tv/track.html' with show=show user=user %}
+
             </div>
         </div>
     {% empty %}
@@ -49,5 +45,3 @@
 {% block script %}
     <script type="module" src="{% static 'tv/script.js' %}"></script>
 {% endblock %}
-
-{% load static %}

@@ -10,9 +10,8 @@
     text-decoration: none;
   }
 
-.track-button {
-  float: right;
-  margin-top: 20px;
+.track-button, .untrack-button {
+  margin: 10px 0 10px 0;
 }
 
 .active {

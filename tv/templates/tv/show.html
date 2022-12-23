@@ -25,13 +25,9 @@
             </div>
         </div>
 
-        {% if user.is_authenticated %}
-            <div class="row">
-                <div class="col-lg-2 col-sm-4">
-                    <button class="btn btn-secondary track-button">Track/Untrack</button>
-                </div>
-            </div>
-        {% endif %}
+        <div class="row">
+            {% include 'tv/track.html' with show=show user=user %}
+        </div>
     </div>
 
 

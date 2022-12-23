@@ -1,0 +1,9 @@
+{% if user.is_authenticated %}
+    <div class="col-lg-2 col-sm-4 track-button">
+        {% if show.id in users.shows %}
+            <button class="btn btn-secondary untrack-button">Untrack</button>
+        {% else %}
+            <button class="btn btn-secondary track-button">Track</button>
+        {% endif %}
+    </div>
+{% endif %}

@@ -20,6 +20,7 @@ def index(request):
 def search(request):
     query = request.GET.get("q")
     shows = util.get_shows(query)
+    print(shows)
     return render(request, "tv/search.html", {
         "shows": shows
     })
