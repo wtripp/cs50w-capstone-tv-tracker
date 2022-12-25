@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "username","first_name", "last_name")
 
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ("id","name","date_added")
+    list_display = ("id","name","channel","premiered","startyear","endyear","mostrecentairdate","status")
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Show, ShowAdmin)

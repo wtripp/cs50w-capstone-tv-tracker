@@ -5,37 +5,7 @@
 
     <h2>Search Results</h2>
     {% for show in shows %}
-        <div class="container-sm show-summary">
-            <div class="row">
-                <div class="col-lg-10 col-sm-8">
-                    <h3>
-                        <a class="show-title" href="{% url 'tv:show' show.id show.urlname %}">{{ show.name }}</a>
-                        {% if show.channel %}
-                            <span> &mdash; {{ show.channel }}</span>
-                        {% endif %}
-
-                        {% if show.startyear and show.endyear %}
-                            {% if show.startyear == show.endyear %}
-                                <span> ({{ show.startyear }})</span>
-                            {% else %}
-                                <span> ({{ show.startyear }}&ndash;{{ show.endyear }})</span>
-                            {% endif %}
-                        {% elif show.startyear and not show.endyear %}
-                            <span> ({{ show.startyear }}&ndash;)</span>
-                        {% endif %}
-                    </h3>
-                    <p>
-                        {% if show.mostrecentairdate %}
-                            <span><strong>Most Recent Episode:</strong> {{ show.mostrecentairdate }}</span>
-                        {% endif %}
-
-                    </p>
-                </div>
-
-                {% include 'tv/track.html' with show=show user=user %}
-
-            </div>
-        </div>
+        {% include 'tv/showsummary.html' with show=show user=user %}
     {% empty %}
         <p>No shows matching that query found.</p>
     {% endfor %}

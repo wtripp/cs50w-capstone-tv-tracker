@@ -1,36 +1,44 @@
-/*
-
 document.addEventListener('DOMContentLoaded', function() {
 
-  document.querySelector('#search').addEventListener('submit', function(event) {
-    event.preventDefault();
-    search();
+  document.querySelectorAll('.track-button').forEach(button => {
+    button.onclick = function() {
+        const show = this.closest('[id^="show-"]');
+        track(show);
+    }
   });
-
 });
 
-function search() {
 
-    const query = document.getElementsByName('q')[0].value;
-    const url = `https://api.tvmaze.com/search/shows?q=${query}`;
-    fetch(url)
-    .then(response => response.json())
-    .then(results => {
+function track(show) {
 
-      fetch('search', {
-        method: 'POST',
-        body: JSON.stringify({
-          results: results,
-        })
+  const show_id = parseInt(show.id.replace(/\D/g, "")); 
+  const button = show.getElementsByClassName("track-button")[0];
+  const track_text = button.innerHTML.trim();
+
+    if (track_text === "Track") {
+
+      fetch(`/track/${show_id}`, {
+        method: 'POST'
       })
       .catch(error => {
-        console.log('Error: ', error);
+          console.log('Error: ', error);
       });
+      
+      button.innerHTML = "Untrack";
 
+  } else if (track_text === "Untrack") {
+    
+    fetch(`/untrack/${show_id}`, {
+      method: 'POST'
     })
     .catch(error => {
         console.log('Error: ', error);
     });
-}
 
-*/
+    button.innerHTML = "Track";
+
+
+
+
+  }
+}

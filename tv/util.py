@@ -1,13 +1,15 @@
 import datetime
 import requests
+from .models import Show
 
 def get_show(show_id):
     """Get data on the shows with the specified ID from the TV Maze API."""
     
     url = f"https://api.tvmaze.com/shows/{show_id}"
-    show = requests.get(url).json()
-    add_show_fields(show)
-    return show
+    show_data = requests.get(url).json()
+    if show_data["status"] != 404:
+        show = create_show(show_data)
+        return show
 
 
 def get_shows(query):
@@ -15,71 +17,74 @@ def get_shows(query):
 
     url = f"https://api.tvmaze.com/search/shows?q={query}"
     results = requests.get(url).json()
-    shows = [result["show"] for result in results]
-    for show in shows:
-        add_show_fields(show)
+    all_show_data = [result["show"] for result in results]
+    shows = [create_show(show_data) for show_data in all_show_data]
     return shows
 
 
-def add_show_fields(show):
-    """Add additional fields to the show."""
+def create_show(show_data):
+    """Create a Show object and add it to the database."""
 
-    set_channel(show)
-    set_start_year(show)
-    set_most_recent_episode(show)
-    set_end_year(show)
-    set_url_name(show)
-
-
-def set_start_year(show):
-    """Set the start year of the show."""
-
-    show["startyear"] = None
-    try:
-        start_year = show["premiered"].split("-")[0]
-        show["startyear"] = start_year
-    except AttributeError:
-        pass
+    return Show.objects.get_or_create(
+        id=show_data["id"],
+        name=show_data["name"],
+        image=get_image(show_data),
+        summary=show_data["summary"],
+        premiered=show_data["premiered"],
+        url=show_data["url"],
+        status=show_data["status"],
+        channel=get_channel(show_data),
+        startyear=get_start_year(show_data),
+        endyear=get_end_year(show_data),
+        mostrecentairdate=get_most_recent_airdate(show_data),
+    )[0]
 
 
-def set_channel(show):
+def get_image(show_data):
+    """Get the image of the show."""
+    if "image" in show_data and show_data["image"]:
+        if "medium" in show_data["image"] and show_data["image"]["medium"]:
+            return show_data["image"]["medium"]
+
+
+def get_channel(show_data):
     """Set the channel of the show."""
 
-    show["channel"] = None
-    if "network" in show and show["network"]:
-        show["channel"] = show["network"]["name"]
-    elif "webChannel" in show and show["webChannel"]:
-        show["channel"] = show["webChannel"]["name"]
+    if "network" in show_data and show_data["network"]:
+        return show_data["network"]["name"]
+    elif "webChannel" in show_data and show_data["webChannel"]:
+        return show_data["webChannel"]["name"]
 
 
-def set_most_recent_episode(show):
+def get_start_year(show_data):
+    """Set the start year of the show."""
+
+    try:
+        return show_data["premiered"].split("-")[0]
+    except AttributeError:
+        return
+
+
+def get_most_recent_airdate(show_data):
     """Set the most recent episode of the show."""
 
-    show["mostrecentairdate"] = None
-    if "nextepisode" in show["_links"] and show["_links"]["nextepisode"]:
-        episode_url = show["_links"]["nextepisode"]["href"]
+    if "nextepisode" in show_data["_links"] and show_data["_links"]["nextepisode"]:
+        episode_url = show_data["_links"]["nextepisode"]["href"]
         episode = requests.get(episode_url).json()
-        show["mostrecentairdate"] = episode["airdate"]
-    elif "previousepisode" in show["_links"] and show["_links"]["previousepisode"]:
-        episode_url = show["_links"]["previousepisode"]["href"]
+        return episode["airdate"]
+    elif "previousepisode" in show_data["_links"] and show_data["_links"]["previousepisode"]:
+        episode_url = show_data["_links"]["previousepisode"]["href"]
         episode = requests.get(episode_url).json()
-        show["mostrecentairdate"] = episode["airdate"]
+        return episode["airdate"]
 
 
-def set_end_year(show):
+def get_end_year(show_data):
     """Set the end year of the show."""
 
-    show["endyear"] = None
     try:
         this_year = datetime.date.today().year
-        end_year = show["mostrecentairdate"].split("-")[0]
+        end_year = get_most_recent_airdate(show_data).split("-")[0]
         if int(end_year) < this_year:
-            show["endyear"] = end_year
+            return end_year
     except AttributeError:
-        pass
-
-
-def set_url_name(show):
-    """Set the name of the show to use in the URL"""
-
-    show["urlname"] = show["name"].lower().replace(" ","-")
+        return

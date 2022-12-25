@@ -2,19 +2,18 @@
 {% load static %}
 
 {% block body %}
-
-    <h2>{{show.name}}</h2>
-    <div class="container float-left show">
+    <h2>{{ show.name }}</h2>
+    <div class="container float-left show" id="show-{{ show.id }}">
         <div class="row">
-            {% if show.image.medium %}
+            {% if show.image %}
                 <div class="col-md-4">
-                    <img src="{{ show.image.medium }}" alt="{{ show.name }}">
+                    <img src="{{ show.image }}" alt="{{ show.name }}">
                 </div>
             {% endif %}
-            <div class="col-md-3">
+            <div class="col-md-4">
                 {{ show.summary|safe }}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <ul class="show-info">
                     <li><strong>Channel:</strong> {{ show.channel }}</li>
                     <li><strong>Premiered:</strong> {{ show.premiered }}</li>

@@ -4,7 +4,18 @@
 {% block body %}
 
     <h2>My Shows</h2>
-    <p>You are currently tracking no shows. Search for shows to track.</p>
+
+    {% if user.is_authenticated %}
+
+        {% for show in shows %}
+            {% include 'tv/showsummary.html' with show=show user=user %}
+        {% empty %}
+            <p>You are currently tracking no shows. Search for shows to track.</p>
+        {% endfor %}
+
+    {% else %}
+        <p>Log in to see the shows you are tracking, or register and being searching for shows to track.</p>
+    {% endif  %}
 
 {% endblock %}
 
