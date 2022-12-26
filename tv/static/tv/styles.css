@@ -26,3 +26,16 @@
 .body {
   padding: 10px;
 }
+
+.sort, .filter {
+  margin: 10px;
+  margin-bottom: 10px;
+}
+
+.vertical-divider {
+  width: 50px;
+}
+
+.active-sort {
+  font-weight: bold;
+}
