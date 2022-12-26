@@ -6,7 +6,7 @@
     background-color: lightgray;
 }
 
-.show-title:hover {
+.show-name:hover {
     text-decoration: none;
   }
 
@@ -34,8 +34,4 @@
 
 .vertical-divider {
   width: 50px;
-}
-
-.active-sort {
-  font-weight: bold;
 }

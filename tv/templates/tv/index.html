@@ -17,19 +17,19 @@
                     <ul class ="navbar-nav">
                         <li class ="nav-item sort">
                             <button class="btn btn-primary sort-button" id="name-sort">Name
-                                <span class="up-arrow active-sort">&#8679;</span>
+                                <span class="up-arrow">&#8679;</span>
                                 <span class="down-arrow">&#8681;</span>
                             </button>
                         </li>
                         <li class ="nav-item sort">
                             <button class="btn btn-primary sort-button" id="channel-sort">Channel
-                                <span class="up-arrow active-sort">&#8679;</span>
+                                <span class="up-arrow">&#8679;</span>
                                 <span class="down-arrow">&#8681;</span>
                             </button>
                         </li>
                         <li class ="nav-item sort">
                             <button class="btn btn-primary sort-button" id="airdate-sort">Most Recent Episode
-                                <span class="up-arrow active-sort">&#8679;</span>
+                                <span class="up-arrow">&#8679;</span>
                                 <span class="down-arrow">&#8681;</span>
                             </button>
                         </li>
@@ -67,11 +67,13 @@
             </nav>
         {% endif %}
 
-        {% for show in shows %}
-            {% include 'tv/showsummary.html' with show=show user=user %}
-        {% empty %}
-            <p>You are currently tracking no shows. Search for shows to track.</p>
-        {% endfor %}
+        <div id="show-summaries">
+            {% for show in shows %}
+                {% include 'tv/showsummary.html' with show=show user=user %}
+            {% empty %}
+                <p>You are currently tracking no shows. Search for shows to track.</p>
+            {% endfor %}
+        </div>
 
     {% else %}
         <p>Log in to see the shows you are tracking, or register and being searching for shows to track.</p>
