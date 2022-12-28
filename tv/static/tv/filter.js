@@ -21,7 +21,6 @@ function create_filter_group(filterGroupName) {
   const nodes = document.querySelectorAll(`.show-${filterGroupName}`);
   const values = Array.from(nodes).map(item => item.textContent);
   const uniqueValues = [...new Set(values)];
-  const filterGroups = [];
 
   // Create the check boxes for those filter names.
   const filterGroup = document.getElementById(`${filterGroupName}-filters`);
