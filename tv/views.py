@@ -12,26 +12,41 @@ from .models import User, Show
 def index(request):
 
     if request.user.is_authenticated:
-        tracked_shows = Show.objects.filter(trackers=request.user)
-        shows = [util.get_show(tracked_show.id) for tracked_show in tracked_shows]
+        tracks = Show.objects.filter(trackers=request.user)
+        ids = tracks.values_list("id", flat=True)
+        shows = [util.get_show(tracked_show.id) for tracked_show in tracks]
     else:
         shows = []
+        ids = []
     return render(request, "tv/index.html", {
-        "shows": shows
+        "shows": shows,
+        "ids": ids
     })
 
 def search(request):
     query = request.GET.get("q")
     shows = util.get_shows(query)
+    if request.user.is_authenticated:
+        tracks = Show.objects.filter(trackers=request.user)
+        ids = tracks.values_list("id", flat=True)
+    else:
+        ids = []
     return render(request, "tv/search.html", {
-        "shows": shows
+        "shows": shows,
+        "ids": ids
     })
 
 
 def show(request, show_id, show_name):
     show = util.get_show(show_id)
+    if request.user.is_authenticated:
+        tracks = Show.objects.filter(trackers=request.user)
+        ids = tracks.values_list("id", flat=True)
+    else:
+        ids = []
     return render(request, "tv/show.html", {
         "show": show,
+        "ids": ids
     })
 
 
@@ -43,11 +58,17 @@ def track(request, show_id):
 
         try:
             show = util.get_show(show_id)
-            request.user.shows.add(show)
-            request.user.save()
-            return HttpResponse(status=204)
         except AttributeError:
             return JsonResponse({"error": "Show to track not found."}, status=404)
+        try:
+            tracked_show = Show.objects.get(pk=show_id)
+        except Show.DoesNotExist:
+            tracked_show = Show.objects.create(id=show["id"], name=show["name"])
+
+        request.user.shows.add(tracked_show)
+        request.user.save()
+
+        return HttpResponse(status=204)
 
     else:
         return JsonResponse({
@@ -65,6 +86,7 @@ def untrack(request, show_id):
         return JsonResponse({"error": "Show to untrack not found."}, status=404)
 
     if request.method == "POST":
+        print(request.user.shows)
         request.user.shows.remove(tracked_show)
         request.user.save()
         return HttpResponse(status=204)

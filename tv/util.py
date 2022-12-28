@@ -1,14 +1,13 @@
 import datetime
 import requests
-from .models import Show
 
 def get_show(show_id):
     """Get data on the shows with the specified ID from the TV Maze API."""
     
     url = f"https://api.tvmaze.com/shows/{show_id}"
-    show_data = requests.get(url).json()
-    if show_data["status"] != 404:
-        show = create_show(show_data)
+    data = requests.get(url).json()
+    if data["status"] != 404:
+        show = update_show(data)
         return show
 
 
@@ -17,73 +16,68 @@ def get_shows(query):
 
     url = f"https://api.tvmaze.com/search/shows?q={query}"
     results = requests.get(url).json()
-    all_show_data = [result["show"] for result in results]
-    shows = [create_show(show_data) for show_data in all_show_data]
+    shows = [update_show(result["show"]) for result in results]
     return shows
 
 
-def create_show(show_data):
-    """Create a Show object and add it to the database."""
+def update_show(data):
+    """Update the show data with additional fields."""
 
-    return Show.objects.get_or_create(
-        id=show_data["id"],
-        name=show_data["name"],
-        image=get_image(show_data),
-        summary=show_data["summary"],
-        premiered=show_data["premiered"],
-        url=show_data["url"],
-        status=show_data["status"],
-        channel=get_channel(show_data),
-        startyear=get_start_year(show_data),
-        endyear=get_end_year(show_data),
-        mostrecentairdate=get_most_recent_airdate(show_data),
-    )[0]
+    data["image"] = get_image(data)
+    data["channel"] = get_channel(data)
+    data["startyear"] = get_start_year(data)
+    data["endyear"] = get_end_year(data)
+    data["mostrecentairdate"] = get_most_recent_airdate(data)
+
+    return data
 
 
-def get_image(show_data):
+def get_image(data):
     """Get the image of the show."""
-    if "image" in show_data and show_data["image"]:
-        if "medium" in show_data["image"] and show_data["image"]["medium"]:
-            return show_data["image"]["medium"]
+    if "image" in data and data["image"]:
+        if "medium" in data["image"] and data["image"]["medium"]:
+            return data["image"]["medium"]
 
 
-def get_channel(show_data):
+def get_channel(data):
     """Set the channel of the show."""
 
-    if "network" in show_data and show_data["network"]:
-        return show_data["network"]["name"]
-    elif "webChannel" in show_data and show_data["webChannel"]:
-        return show_data["webChannel"]["name"]
+    if "network" in data and data["network"]:
+        return data["network"]["name"]
+    elif "webChannel" in data and data["webChannel"]:
+        return data["webChannel"]["name"]
 
 
-def get_start_year(show_data):
+def get_start_year(data):
     """Set the start year of the show."""
 
     try:
-        return show_data["premiered"].split("-")[0]
+        return data["premiered"].split("-")[0]
     except AttributeError:
         return
 
 
-def get_most_recent_airdate(show_data):
+def get_most_recent_airdate(data):
     """Set the most recent episode of the show."""
 
-    if "nextepisode" in show_data["_links"] and show_data["_links"]["nextepisode"]:
-        episode_url = show_data["_links"]["nextepisode"]["href"]
+    if "nextepisode" in data["_links"] and data["_links"]["nextepisode"]:
+        episode_url = data["_links"]["nextepisode"]["href"]
         episode = requests.get(episode_url).json()
         return episode["airdate"]
-    elif "previousepisode" in show_data["_links"] and show_data["_links"]["previousepisode"]:
-        episode_url = show_data["_links"]["previousepisode"]["href"]
+    elif "previousepisode" in data["_links"] and data["_links"]["previousepisode"]:
+        episode_url = data["_links"]["previousepisode"]["href"]
         episode = requests.get(episode_url).json()
         return episode["airdate"]
+    else:
+        return "0000-00-00"
 
 
-def get_end_year(show_data):
+def get_end_year(data):
     """Set the end year of the show."""
 
     try:
         this_year = datetime.date.today().year
-        end_year = get_most_recent_airdate(show_data).split("-")[0]
+        end_year = get_most_recent_airdate(data).split("-")[0]
         if int(end_year) < this_year:
             return end_year
     except AttributeError:
