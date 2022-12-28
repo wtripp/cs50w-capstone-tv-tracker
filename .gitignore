@@ -1,3 +1,4 @@
 db.sqlite3
 tv/__pycache__
 tv/migrations/__pycache__
+tv/__pycache__/admin.cpython-38.pyc
