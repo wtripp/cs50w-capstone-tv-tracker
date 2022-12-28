@@ -1,0 +1,3 @@
+db.sqlite3
+tv/__pycache__
+tv/migrations/__pycache__
