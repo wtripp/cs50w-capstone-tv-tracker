@@ -7,7 +7,7 @@ For this project, I made a web application that enables you to track the shows y
 
 This app fetches data from the [TV Maze API](https://www.tvmaze.com/api), an open-source API widely used in the television industry to get information about television shows. You can see a demo of the project here:
 
-TODO: Youtube link
+https://youtu.be/IyGX9JsCeW8
 
 ## Motivation
 I came up with this idea because I've had a difficult time tracking the TV shows I watch. Although sites like TV Maze provide a wealth of data about television shows, I found them too heavyweight for my needs. I wanted an app that strips the information down to the essentials, which for me are:
@@ -19,7 +19,7 @@ I came up with this idea because I've had a difficult time tracking the TV shows
 Prior to this project, I was capturing this information in a spreadsheet, but it was difficult to maintain. This app seemed like the perfect way to automate the process.
 
 ## Distinctiveness and Complexity
-TV Tracker is an entertainment website like IMDB, which makes it distinct from previous projects and their real-world counterparts.
+TV Tracker is an entertainment website like IMDB, which makes it distinct from previous projects and their real-world counterparts:
 
 * Search (Google search)
 * Wiki (Wikipedia)
@@ -31,7 +31,7 @@ What also makes it distinct is that its data comes from an external API. In the 
 
 Another factor that made this more complex than previous projects was the use of sorting and filtering. In JavaScript, sorting and filtering results based on different show attributes, without having to refresh the page, involved some complex logic to ensure the right results appeared, in the right order, when users click the sort buttons and select the filter check boxes.
 
-Finally, this project uses more advanced responsive design techniques, like a collapsible hamburger menu on small screens, to make the application mobile-friendly.
+Finally, this project uses more advanced responsive design techniques, like a collapsible hamburger menu on small screens, to make the application mobile friendly.
 
 ## Summary of Files
 This application uses a mixture of Python, HTML with Bootstrap, CSS, and JavaScript.
@@ -41,30 +41,30 @@ These are the key files that I directly edited in this app:
 
 * `tv/admin.py` - Controls the display of the fields for the `User` and `Show` models on the `/admin` route.
 * `tv/apps.py` - Configures the app and sets its name (`tv`).
-* `tv/models.py` - Configures the Django models used.
+* `tv/models.py` - Configures the Django models used:
 * * `Show` - TV show model. The show ID in the primary key and is inherited from the TV Maze show ID. The only other show data maintained in the database is the show name, mainly used for reference in the `/admin` route. No other show data is maintained in the database. Instead, it is looked up from the TV Maze API based on the show ID.
-* * `User` - User model. Inherits the abstract user field such as username and password. It also has a `shows` field that tracks the shows (`Show` objects) they are tracking. This is a `ManyToManyField` with related name of `trackers`: A user can track many shows and a show can have many trackers.
-* `tv/urls.py` - Configures the URL routes. It includes standard URL routes for registering, logging in/out, and searching for results, as well as for the home page and individual show pages. It also includes API routes for tracking/untracking shows.
-* `tv/util.py` - Utility functions used in the views. The main purpose of these functions is to fetch the data using the TV Maze API and update that data with additional fields before returning it back to the views.
+* * `User` - User model. Inherits the abstract user models fields, such as username and password. It also has a `shows` field that tracks the shows (`Show` objects) that each user is tracking. This field is a `ManyToManyField` with a related name of `trackers`: A user can track many shows, and a show can have many trackers.
+* `tv/urls.py` - Configures the URL routes. It includes regular URL routes for registering, logging in and out, and searching for results, as well as for the home page and individual show pages. It also includes API routes for tracking and untracking shows.
+* `tv/util.py` - Utility functions used in the views. The main purpose of these functions is to fetch the data using the TV Maze API and update that data with additional fields before returning it back to the views. I decided to make the API calls through Django instead of JavaScript beacuse of the complexity involved in having multiple different asynchronous calls to external APIs to fetch the data. This resulted in simpler, more maintainable Python code, but the search results are slightly slower. In the future, I may reconsider this option and implement the API fully in JavaScript.
 * `tv/views.py` - Controls the views for rendering the web pages. In most views, first the data is fetched from the TV Maze API using the helper functions in `util.py`. Then the data is passed to the HTML templates for rendering.
 
-I also updated `settings.py` and `urls.py` to configure the tv app, but I did not customize much beyond that. All other files were unused, unedited, or autogenerated.
+I also updated `settings.py` and `urls.py` to configure the tv app, but I did not customize these file much beyond that. All other Python files in the application were unused, unedited, or autogenerated.
 
 ### HTML Templates
-For this project, I created these HTML files in the `tv/templates/tv` folder:
+For this project, in the `tv/templates/tv` folder, I created these HTML files:
 * `index.html` - Home page for the website. If the user is logged in and has selected shows to track, this page includes the summaries of the tracked shows and options to sort and filter them.
-* `layout.html` - Base file for all HTML in this project. Includes the top navigation. The `<head>` elements includes a link to Bootstrap, the front-end library used to render the web pages. 
-* `login.html` - Login page with fields for users to enter their username and password, plus a link to register if users do not have a username. 
-* `register.html` - Page to register for an account by specifying a username, email, password, and password combination.
+* `layout.html` - Base file for all HTML in this project. This file includes the top navigation of the web page. The `<head>` element includes a link to Bootstrap, the front-end library used to render the web pages. 
+* `login.html` - Login page with fields for users to enter their usernames and passwords, plus a link to register. 
+* `register.html` - Page to register for an account by specifying a username, email, password, and password confirmation.
 * `search.html` - Page to display search results as a series of show summaries.
-* `show.html` - Page used to display information about the show. These pages include more information than in the show summaries, including an image and a URL to the equivalent TV Maze page. 
+* `show.html` - Page used to display information about the show. These pages include more information than in the show summaries, including an image and a URL to the equivalent TV Maze page.
 * `showsummary.html` - An include file just for the show summary. This summary is reused on both the search results page and the home page. 
 * `track.html` - An include file just for the "Track/Untrack" button. This button is reused on the search results page, home page, and the individual show pages.
 
 ### Static Files
-For this project, I created these HTML files in the `tv/static/tv` folder:
-* `filter.js` - Controls the filtering behavior on the "My Shows" home page (also known as faceted search). This script dynamically generates the filter groups and check boxes based on the data for the currently tracked shows. Then, it hides or displays the appropriate show summaries whenever the check boxes are selected or cleared.
-* `menu.js` - Toggles the expanding and collapsing of the hamburger menu for the search and filter buttons. This menu appears only on small screens.
+For this project, in the `tv/static/tv` folder, I created these static CSS and JavaScript files :
+* `filter.js` - Controls the filtering behavior on the "My Shows" home page, also known as faceted search. This script dynamically generates the filter groups and check boxes based on the data for the currently tracked shows. Then, it hides or displays the appropriate show summaries whenever the check boxes are selected or cleared.
+* `menu.js` - Toggles the expanding and collapsing of the hamburger menu that contains the search and filter buttons. This hamburger icon appears only on small screens.
 * `sort.js` - Controls the sorting behavior of the buttons. Each sort button acts as a toggle that sorts the results in either ascending or descending order. By default, shows are sorted by most recent episode airdate, making it easy to find out which shows are currently airing or about to air new episodes.
 * `style.css` - Contains style customizations beyond the Bootstrap styles. For example, it defines the gray rounded boxes used to format the show summaries.
 * `track.js` - Controls the behavior of the "Track" and "Untrack" buttons. When the buttons are clicked, the functions in this file run asynchronously fetch calls to update the database with shows that are now being tracked or untracked.
@@ -108,6 +108,6 @@ From this application, you can try the following things:
 * Click "Track", either on the show pages or search results pages, to track shows.
 * Click "TV Tracker" to go back to the home page and view your tracked shows.
 * Click the sort and filter buttons to change which shows display on your home page.
-* Click "Untrack" and refresh the page to see that you no longer track the shows.
-* Log out and search for shows to confirm that no "Track/Untrack" buttons appear.
+* Click "Untrack" for a show and refresh the page to see that you no longer track the show.
+* Log out and search for shows to confirm that no "Track" or "Untrack" buttons appear.
 * Expand or contract the browser window to view the responsive design of the page.
