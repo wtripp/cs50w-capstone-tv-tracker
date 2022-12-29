@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const filterGroupNames = ["channel", "status"];
     filterGroupNames.forEach(filterGroupName => {
-      const filterGroup = create_filter_group(filterGroupName);
+      const filterGroup = createFilterGroup(filterGroupName);
       const filters = filterGroup.querySelectorAll(".form-check-input");
       filters.forEach(filter => {
         filter.addEventListener('change', () => {
-          toggle_checkbox(filter);
-          apply_filters(filterGroupNames);
+          toggleCheckbox(filter);
+          applyFilters(filterGroupNames);
       });
     });
   });
 });
 
 
-function create_filter_group(filterGroupName) {
+function createFilterGroup(filterGroupName) {
 /* Create the filter check boxes for the specified filter group. */
 
   // Get the filter names for the group.
@@ -54,7 +54,7 @@ function create_filter_group(filterGroupName) {
 }
 
 
-function toggle_checkbox(filter) {
+function toggleCheckbox(filter) {
 
   if (filter.hasAttribute("checked")) {
     filter.removeAttribute("checked");
@@ -64,15 +64,15 @@ function toggle_checkbox(filter) {
 }
 
 
-function apply_filters(filterGroupNames) {
+function applyFilters(filterGroupNames) {
   /* Apply the filtering to the filter group. */
 
   const summaries = document.querySelectorAll(".show-summary");
   summaries.forEach(summary => {
 
-    const display_summary = check_for_display(summary, filterGroupNames);
+    const displaySummary = checkForDisplay(summary, filterGroupNames);
 
-    if (display_summary) {
+    if (displaySummary) {
       summary.style.display = "block";
     } else {
       summary.style.display = "none";
@@ -82,10 +82,10 @@ function apply_filters(filterGroupNames) {
 }
 
 
-function check_for_display(summary, filterGroupNames) {
+function checkForDisplay(summary, filterGroupNames) {
 /* Returns true if the show summary should be displayed. */
 
-  const filter_checks = [];
+  const filterChecks = [];
   filterGroupNames.forEach(filterGroupName => {
   
     const filterGroup = document.getElementById(`${filterGroupName}-filters`);
@@ -96,11 +96,11 @@ function check_for_display(summary, filterGroupNames) {
       const showDataText = summary.querySelector(`.show-${filterGroupName}`).textContent;
 
       if (labelText === showDataText) {
-        filter_checks.push(isChecked);
+        filterChecks.push(isChecked);
       }
     });
   });
 
-  return filter_checks.every(check => check === true);
+  return filterChecks.every(check => check === true);
 
 }

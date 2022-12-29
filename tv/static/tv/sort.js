@@ -4,15 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const channelSortButton = document.getElementById("channel-sort");
   const airdateSortButton = document.getElementById("airdate-sort");
 
-  sort_shows(airdateSortButton, ".show-airdate");
+  sortShows(airdateSortButton, ".show-airdate");
 
-  nameSortButton.addEventListener('click', () => sort_shows(nameSortButton, ".show-name"));
-  channelSortButton.addEventListener('click', () => sort_shows(channelSortButton, ".show-channel"));
-  airdateSortButton.addEventListener('click', () => sort_shows(airdateSortButton, ".show-airdate"));
+  nameSortButton.addEventListener('click', () => sortShows(nameSortButton, ".show-name"));
+  channelSortButton.addEventListener('click', () => sortShows(channelSortButton, ".show-channel"));
+  airdateSortButton.addEventListener('click', () => sortShows(airdateSortButton, ".show-airdate"));
 
 });
 
-function sort_shows(button, sortKeyClass) {
+function sortShows(button, sortKeyClass) {
 // Sort shows based on a sorting class key and update the button toggle.
 
   // Get show summaries.
